@@ -1,0 +1,23 @@
+# Optional auth overlay — adds nginx basic auth in front of LineageMap.
+#
+# Setup:
+#   1. Install apache2-utils:  brew install httpd  (mac)  /  apt install apache2-utils  (linux)
+#   2. Create a password file: htpasswd -c .htpasswd <username>
+#   3. Start with auth:        docker compose -f docker-compose.yml -f docker-compose.auth.yml up -d
+#
+# The lineagemap service is no longer exposed directly — all traffic goes through nginx.
+
+services:
+  lineagemap:
+    ports: !reset []  # remove direct port exposure; nginx is the only entry point
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "${PORT:-3000}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro
+    depends_on:
+      - lineagemap
+    restart: unless-stopped

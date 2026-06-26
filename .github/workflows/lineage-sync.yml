@@ -1,0 +1,29 @@
+name: Sync Lineage
+
+# Drop this workflow into your dbt project's .github/workflows/ directory.
+# After every dbt compile on main, it POSTs to your self-hosted LineageMap
+# instance so the team always sees current lineage.
+#
+# Required repository secrets:
+#   LINEAGEMAP_URL          — e.g. http://lineagemap.internal.company.com:3000
+#   LINEAGEMAP_RELOAD_TOKEN — matches LINEAGEMAP_RELOAD_TOKEN on the server
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "models/**"
+      - "dbt_project.yml"
+      - "target/manifest.json"
+
+jobs:
+  sync:
+    name: Reload LineageMap
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger reload
+        run: |
+          curl --fail --silent --show-error \
+            -X POST "${{ secrets.LINEAGEMAP_URL }}/api/reload" \
+            -H "Authorization: Bearer ${{ secrets.LINEAGEMAP_RELOAD_TOKEN }}"

@@ -8,4 +8,8 @@ services:
       # Run `dbt compile` first to generate it, then set MANIFEST_PATH or
       # place manifest.json in the same directory as this file.
       - ${MANIFEST_PATH:-./manifest.json}:/manifest.json:ro
+    environment:
+      # Set a secret token to protect the /api/reload endpoint.
+      # CI must pass: Authorization: Bearer <token>
+      - LINEAGEMAP_RELOAD_TOKEN=${LINEAGEMAP_RELOAD_TOKEN:-}
     restart: unless-stopped

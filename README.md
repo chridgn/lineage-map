@@ -132,20 +132,65 @@ lineagemap serve --host 0.0.0.0 --manifest target/manifest.json
 
 For a more robust setup (auto-restart on reboot), use Docker Compose (Option 2) or configure a systemd service.
 
-### Keeping lineage up to date
+### Keeping lineage up to date automatically
 
-Re-run `dbt compile` whenever your dbt project changes, then restart the container to pick up the new manifest:
+LineageMap exposes a `POST /api/reload` endpoint that re-parses the manifest and updates every connected browser — no restart needed.
+
+**1. Set a reload token on your server**
+
+This protects the endpoint so only your CI pipeline can trigger a reload.
+
+In your `.env` or shell:
 
 ```bash
-dbt compile
-docker compose restart
+export LINEAGEMAP_RELOAD_TOKEN=your-secret-token
 ```
 
-Or point LineageMap at your dbt project's `target/` directory directly so it always reads the latest compiled output:
+With Docker Compose:
 
 ```bash
-MANIFEST_PATH=./target/manifest.json docker compose up -d
+LINEAGEMAP_RELOAD_TOKEN=your-secret-token docker compose up -d
 ```
+
+**2. Trigger a reload from CI**
+
+After `dbt compile` runs in your dbt project's CI pipeline, add a step to notify LineageMap:
+
+```bash
+curl -X POST https://lineagemap.your-company.com/api/reload \
+  -H "Authorization: Bearer your-secret-token"
+```
+
+Or use the ready-made GitHub Action — copy `.github/workflows/lineage-sync.yml` from this repo into your dbt project and add two repository secrets:
+
+| Secret | Value |
+|---|---|
+| `LINEAGEMAP_URL` | `http://lineagemap.your-company.com:3000` |
+| `LINEAGEMAP_RELOAD_TOKEN` | your secret token |
+
+The workflow fires automatically on pushes to `main` that touch `models/` or `dbt_project.yml`.
+
+### Protecting access with basic auth
+
+To require a username and password before anyone can view the dashboard, use the included nginx overlay.
+
+**1. Generate a password file**
+
+```bash
+# macOS
+brew install httpd && htpasswd -c .htpasswd <username>
+
+# Linux
+apt install apache2-utils && htpasswd -c .htpasswd <username>
+```
+
+**2. Start with auth enabled**
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.auth.yml up -d
+```
+
+Your team accesses `http://your-server:3000` and is prompted for credentials. The `/api/reload` endpoint bypasses basic auth so CI can still trigger reloads using only the Bearer token.
 
 ## How it works
 

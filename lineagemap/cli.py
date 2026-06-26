@@ -31,7 +31,13 @@ def cli() -> None:
 @click.option("--port", default=3000, show_default=True, help="Port to listen on")
 @click.option("--host", default="127.0.0.1", show_default=True, help="Host to bind to")
 @click.option("--dialect", default=None, help="SQL dialect (snowflake, bigquery, redshift)")
-def serve(manifest: str, port: int, host: str, dialect: str | None) -> None:
+@click.option(
+    "--reload-token",
+    default=None,
+    envvar="LINEAGEMAP_RELOAD_TOKEN",
+    help="Secret token required to call /api/reload (env: LINEAGEMAP_RELOAD_TOKEN)",
+)
+def serve(manifest: str, port: int, host: str, dialect: str | None, reload_token: str | None) -> None:
     """Start the LineageMap web UI at http://localhost:<port>."""
     try:
         import uvicorn
@@ -46,7 +52,7 @@ def serve(manifest: str, port: int, host: str, dialect: str | None) -> None:
         raise SystemExit(1)
 
     from .server.app import create_app
-    app = create_app(manifest_path=str(manifest_path), dialect=dialect)
+    app = create_app(manifest_path=str(manifest_path), dialect=dialect, reload_token=reload_token)
 
     console.print(f"[bold green]LineageMap[/bold green] running at [link=http://{host}:{port}]http://{host}:{port}[/link]")
     uvicorn.run(app, host=host, port=port, log_level="warning")
