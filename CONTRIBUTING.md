@@ -20,10 +20,10 @@ pytest tests/
 ## Running the UI locally
 
 ```bash
-# Terminal 1 — backend
+# Terminal 1: backend
 lineagemap serve --manifest tests/fixtures/simple_manifest.json
 
-# Terminal 2 — frontend dev server (hot reload)
+# Terminal 2: frontend dev server (hot reload)
 cd frontend && npm install && npm run dev
 ```
 
@@ -47,7 +47,7 @@ This writes the production bundle to `lineagemap/server/static/` which gets serv
 ## Code style
 
 - Python 3.10+, type hints everywhere
-- No comments that explain *what* the code does — only *why* when it's non-obvious
+- No comments that explain *what* the code does: only *why* when it's non-obvious
 - Keep the dependency count low
 
 ## Submitting a PR

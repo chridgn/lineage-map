@@ -23,6 +23,9 @@ docs/*.mov
 .DS_Store
 Thumbs.db
 
+# Claude Code
+CLAUDE.md
+
 # Editor
 .vscode/
 .idea/

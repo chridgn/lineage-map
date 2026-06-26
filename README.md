@@ -51,7 +51,7 @@ Hover any node to see its full upstream (blue) and downstream (red) lineage inst
 
 ## How it works
 
-1. Reads `manifest.json` from `dbt compile` — no live warehouse connection needed
+1. Reads `manifest.json` from `dbt compile` (no live warehouse connection needed)
 2. Parses each model's compiled SQL with [sqlglot](https://github.com/tobymao/sqlglot) to extract column-level dependencies
 3. Builds a column lineage graph you can explore in the terminal or web UI
 
@@ -61,19 +61,19 @@ Hover any node to see its full upstream (blue) and downstream (red) lineage inst
 |-------------------------|:----------:|:---------:|:------------:|:-----------:|
 | Column-level lineage    | ✅          | ❌         | ✅            | ✅           |
 | Self-hostable           | ✅          | ❌         | ✅ (complex)  | ❌           |
-| One-command setup       | ✅          | —         | ❌            | ❌           |
+| One-command setup       | ✅          | N/A       | ❌            | ❌           |
 | No warehouse connection | ✅          | ✅         | ❌            | ❌           |
 | Open source             | ✅          | ❌         | ✅            | ❌           |
 | Cost                    | Free       | $$$       | Free (DIY)   | $$$$$       |
 
-DataHub and OpenMetadata are powerful — but they require Kubernetes, Kafka, and a dedicated data platform team to operate. LineageMap is for the team that just needs to answer "what breaks if I change this column?" in under a minute.
+DataHub and OpenMetadata are powerful, but they require Kubernetes, Kafka, and a dedicated data platform team to operate. LineageMap is for the team that just needs to answer "what breaks if I change this column?" in under a minute.
 
 ## Roadmap
 
-- [x] Phase 1 — CLI + SQL parser (`lineagemap trace`)
-- [x] Phase 2 — Local web UI with interactive DAG visualization
-- [ ] Phase 3 — Hosted tier: upload `manifest.json` → get a shareable URL
-- [ ] Phase 4 — GitHub Action: post updated lineage URL on every dbt PR
+- [x] Phase 1: CLI + SQL parser (`lineagemap trace`)
+- [x] Phase 2: Local web UI with interactive DAG visualization
+- [ ] Phase 3: Hosted tier: upload `manifest.json` → get a shareable URL
+- [ ] Phase 4: GitHub Action: post updated lineage URL on every dbt PR
 
 ## Contributing
 
