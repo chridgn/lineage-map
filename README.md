@@ -104,15 +104,33 @@ Stop the server:
 docker compose down
 ```
 
-### Option 3: pip install (local only)
+### Option 3: pip install
 
-If you just want to run it on your own machine without Docker:
+Install the package, then serve directly from your dbt project directory:
 
 ```bash
 pip install "lineagemap[server]"
 dbt compile
-lineagemap serve
+lineagemap serve --host 0.0.0.0 --manifest target/manifest.json
 ```
+
+Share `http://<your-server-ip>:3000` with your team.
+
+By default (`--host 127.0.0.1`) the server is localhost-only. Pass `--host 0.0.0.0` to make it network-accessible.
+
+To keep it running after you close the terminal:
+
+```bash
+# Using nohup
+nohup lineagemap serve --host 0.0.0.0 --manifest target/manifest.json &
+
+# Or with screen
+screen -S lineagemap
+lineagemap serve --host 0.0.0.0 --manifest target/manifest.json
+# Detach with Ctrl+A, D
+```
+
+For a more robust setup (auto-restart on reboot), use Docker Compose (Option 2) or configure a systemd service.
 
 ### Keeping lineage up to date
 
