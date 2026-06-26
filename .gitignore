@@ -16,6 +16,9 @@ htmlcov/
 # Frontend
 frontend/node_modules/
 
+# Demo source files (keep only the built GIF)
+docs/*.mov
+
 # OS
 .DS_Store
 Thumbs.db

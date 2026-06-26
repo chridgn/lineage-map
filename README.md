@@ -2,8 +2,7 @@
 
 Column-level data lineage for dbt projects. One command, no catalog required.
 
-<!-- TODO: replace with demo GIF — record the hover interaction in the web UI -->
-<!-- ![LineageMap demo](docs/demo.gif) -->
+![LineageMap demo](docs/demo.gif)
 
 ```
 $ lineagemap trace --column revenue
