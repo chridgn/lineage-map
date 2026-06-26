@@ -6,12 +6,31 @@ build-backend = "hatchling.build"
 name = "lineagemap"
 version = "0.1.0"
 description = "Column-level data lineage for dbt projects. One command, no catalog required."
+readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
+authors = [{ name = "Christian Quebral", email = "christianquebral@gmail.com" }]
+keywords = ["dbt", "data lineage", "data engineering", "sql", "analytics engineering"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Database",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 dependencies = [
     "sqlglot>=20.0.0",
     "click>=8.0.0",
     "rich>=13.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/christianquebral/lineagemap"
+Repository = "https://github.com/christianquebral/lineagemap"
+Issues = "https://github.com/christianquebral/lineagemap/issues"
 
 [project.scripts]
 lineagemap = "lineagemap.cli:cli"
@@ -24,6 +43,14 @@ server = [
 dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "lineagemap/**",
+]
+artifacts = [
+    "lineagemap/server/static/**",
 ]
 
 [tool.pytest.ini_options]
