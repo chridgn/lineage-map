@@ -1,0 +1,11 @@
+services:
+  lineagemap:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      # Mount your dbt project's manifest.json here.
+      # Run `dbt compile` first to generate it, then set MANIFEST_PATH or
+      # place manifest.json in the same directory as this file.
+      - ${MANIFEST_PATH:-./manifest.json}:/manifest.json:ro
+    restart: unless-stopped

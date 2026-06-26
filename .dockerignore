@@ -1,0 +1,14 @@
+.git/
+.venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+frontend/node_modules/
+dist/
+build/
+docs/
+tests/
+CONTRIBUTING.md
+.github/
+CLAUDE.md
+.gitignore
