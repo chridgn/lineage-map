@@ -23,6 +23,37 @@ def cli() -> None:
 
 @cli.command()
 @click.option(
+    "--manifest",
+    default="manifest.json",
+    show_default=True,
+    help="Path to dbt manifest.json",
+)
+@click.option("--port", default=3000, show_default=True, help="Port to listen on")
+@click.option("--host", default="127.0.0.1", show_default=True, help="Host to bind to")
+@click.option("--dialect", default=None, help="SQL dialect (snowflake, bigquery, redshift)")
+def serve(manifest: str, port: int, host: str, dialect: str | None) -> None:
+    """Start the LineageMap web UI at http://localhost:<port>."""
+    try:
+        import uvicorn
+    except ImportError:
+        console.print("[red]uvicorn not installed.[/red] Run: pip install 'lineagemap[server]'")
+        raise SystemExit(1)
+
+    manifest_path = Path(manifest)
+    if not manifest_path.exists():
+        console.print(f"[red]manifest.json not found at {manifest_path.resolve()}[/red]")
+        console.print("Run [bold]dbt compile[/bold] first to generate it.")
+        raise SystemExit(1)
+
+    from .server.app import create_app
+    app = create_app(manifest_path=str(manifest_path), dialect=dialect)
+
+    console.print(f"[bold green]LineageMap[/bold green] running at [link=http://{host}:{port}]http://{host}:{port}[/link]")
+    uvicorn.run(app, host=host, port=port, log_level="warning")
+
+
+@cli.command()
+@click.option(
     "--column", "-c",
     required=True,
     help="Column name to trace (e.g. revenue)",
